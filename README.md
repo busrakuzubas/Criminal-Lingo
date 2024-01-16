@@ -15,6 +15,9 @@
 • Technology Used: Natural Language Toolkit, Scikit-learn, Pandas, WordCloud, Matplotlib
 
 
+
+
+
 2. View Layer:
 • Home Interface: Represents the home page of the system.
 
@@ -27,6 +30,9 @@
 Templates:
 
 • Two template interfaces defined for versatility.
+
+
+
 
 
 3. Controller Layer:
