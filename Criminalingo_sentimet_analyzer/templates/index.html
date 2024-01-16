@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, h1, h2, h3, p, ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            background-color: #007BFF;
+            padding: 10px 0;
+        }
+
+        .navbar-menu {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar-menu li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        .navbar-menu a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .logo {
+            color: #007BFF;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .delete-button {
+            background-color: #1d0f4b; /* Kırmızı renk */
+            color: white;
+            padding: 3px 6px; /* Daha küçük boyut */
+            border: none;
+            border-radius: 10px; /* Kenarları yuvarlak hale getirme */
+            cursor: pointer;
+            position: absolute;
+            bottom: 10px; /* Yükseklik ayarı */
+            right: 10px; /* Sağa uzaklık ayarı */
+        }
+
+
+
+        .delete-button:hover {
+            background-color: #a60d1c; /* Kırmızının daha koyu tonu hover durumunda */
+        }
+
+        .image-gallery {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .image-gallery img {
+            max-width: 30%;
+            height: auto;
+            margin-bottom: 20px;
+        
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <ul class="navbar-menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/graph">Dataset Analysis</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Ana İçerik Konteyneri -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 tweets-section">
+                <h2>Tweets</h2>
+                <ul class="list-group" id="pastTweets">
+                    <!-- example_tweets üzerinde dönerek tweet'leri görüntüle -->
+                    {% for tweet in example_tweets %}
+                        <li class="list-group-item">
+                            <span class="tweet-text">{{ tweet.text }} - Sentiment: {{ tweet.sentiment }}</span>
+                            <button class="delete-button" onclick="deleteTweet('{{ tweet.text }}')">Sil</button>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+
+            <div class="col-md-8">
+                <!-- Sayfa Başlığı ve Tweet Analiz Formu -->
+                <h1 class="logo">Sentiment Analysis</h1>
+                <form action="/analyze" method="post">
+                    <label for="tweet_text">Enter a tweet:</label>
+                    <input type="text" id="tweet_text" name="tweet_text" required>
+                    <button type="submit">Analyze</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<!--RESİM GALARİSİ YORUM SATIRI
+        <div class="row">
+            <div class="col-md-8">
+                
+                <div class="image-gallery">
+                   
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="image-gallery">
+                    <img src="dataset_dis.png" alt="Dataset Distribution" width="300" height="200">
+                </div>
+                <div class="image-gallery">
+                    <img src="tweet_dis.png" alt="Tweet Distribution" width="300" height="200">
+                </div>
+                <div class="da">
+                    <img src="tweet1.png" alt="Tweet Sample" width="300" height="200">
+                </div>
+            </div>
+        </div>
+    </div>
+--> 
+    <!-- Bootstrap ve diğer script dosyaları -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function deleteTweet(tweetText) {
+            var confirmDelete = confirm("Bu tweet'i silmek istediğinizden emin misiniz?");
+            if (confirmDelete) {
+                // Silme talebini Flask endpoint'ine ileten AJAX çağrısı
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/delete_tweet", true);
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xhr.onload = function() {
+                    // Silme işlemi tamamlandığında sayfayı yenile
+                    location.reload();
+                };
+                xhr.send(JSON.stringify({ "tweet_text": tweetText }));
+            }
+        }
+        // Örnek tweet verileri
+        var exampleTweets = [
+           
+        ];
+
+        // Sayfa yüklendiğinde örnek tweetleri sol panele ekle
+        $(document).ready(function() {
+            exampleTweets.forEach(function(tweet) {
+                $('#pastTweets').append('<li class="list-group-item">' + tweet.text + ' - Sentiment: ' + tweet.sentiment + '</li>');
+            });
+        });
+    </script>
+</body>
+</html>
