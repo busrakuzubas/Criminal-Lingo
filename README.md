@@ -8,6 +8,8 @@
 • Test: Conducts testing procedures on the model.
 • Load Model: Facilitates the loading of the trained model.
 • Technology Used: Natural Language Toolkit, Scikit-learn, Pandas, WordCloud, Matplotlib
+
+
 2. View Layer:
 • Home Interface: Represents the home page of the system.
 • Analysis Interface: Provides tools for data analysis.
@@ -15,6 +17,8 @@
 • Technology Used: Utilizes HTML, CSS, JavaScript, and Bootstrap for interface design.
 Templates:
 • Two template interfaces defined for versatility.
+
+
 3. Controller Layer:
 • Routes: Defines the routes for the controller layer.
 • Analyze Method: Implements the analysis functionality.
